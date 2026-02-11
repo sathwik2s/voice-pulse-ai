@@ -1,0 +1,14 @@
+flask==3.0.0
+flask-cors==4.0.0
+torch
+torchaudio
+transformers
+librosa
+soundfile
+numpy
+scipy
+waitress
+werkzeug==3.0.1
+pydub
+imageio-ffmpeg
+protobuf

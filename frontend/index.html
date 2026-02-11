@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VoicePulse AI - Real-Time Speech Emotion Intelligence Dashboard">
+    <title>VoicePulse AI - Speech Emotion Intelligence</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-waveform-lines"></i>
+                    <h1>VoicePulse <span class="ai-badge">AI</span></h1>
+                </div>
+                <p class="tagline">Real-Time Speech Emotion Intelligence</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Upload Section -->
+            <section id="upload-section" class="section upload-section">
+                <div class="upload-card glass-card">
+                    <div class="upload-icon">
+                        <i class="fas fa-microphone-lines"></i>
+                    </div>
+                    <h2>Analyze Voice Emotion</h2>
+                    <p class="subtitle">Upload audio or record your voice to detect emotions and sentiment</p>
+                    
+                    <div class="upload-options">
+                        <!-- File Upload -->
+                        <div class="upload-option">
+                            <label for="audio-file" class="btn btn-primary">
+                                <i class="fas fa-cloud-upload"></i>
+                                Upload Audio File
+                            </label>
+                            <input type="file" id="audio-file" accept="audio/*" hidden>
+                            <p class="file-info" id="file-info">Supports: WAV, MP3, M4A (max 50MB)</p>
+                        </div>
+                        
+                        <!-- OR Divider -->
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+                        
+                        <!-- Record Audio -->
+                        <div class="upload-option">
+                            <button id="record-btn" class="btn btn-secondary">
+                                <i class="fas fa-microphone"></i>
+                                <span id="record-text">Record Voice</span>
+                            </button>
+                            <p class="recording-timer" id="recording-timer" style="display: none;">00:00</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Analyze Button -->
+                    <button id="analyze-btn" class="btn btn-analyze" disabled>
+                        <i class="fas fa-brain"></i>
+                        Analyze Emotion
+                    </button>
+                    
+                    <!-- Progress Bar -->
+                    <div id="progress-container" class="progress-container" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p class="progress-text" id="progress-text">Processing audio...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="section dashboard-section" style="display: none;">
+                
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card glass-card">
+                        <div class="card-icon emotion-icon">
+                            <i class="fas fa-face-smile"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Primary Emotion</h3>
+                            <p class="card-value" id="primary-emotion">--</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card glass-card">
+                        <div class="card-icon confidence-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Avg Confidence</h3>
+                            <p class="card-value" id="avg-confidence">--</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card glass-card">
+                        <div class="card-icon sentiment-icon">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Overall Sentiment</h3>
+                            <p class="card-value" id="overall-sentiment">--</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card glass-card">
+                        <div class="card-icon transitions-icon">
+                            <i class="fas fa-shuffle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Transitions</h3>
+                            <p class="card-value" id="total-transitions">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    
+                    <!-- Emotion Timeline -->
+                    <div class="chart-card glass-card full-width">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-timeline"></i> Emotion Timeline</h3>
+                            <p class="chart-subtitle">Emotion changes over time</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="timeline-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Confidence Curve -->
+                    <div class="chart-card glass-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-area"></i> Confidence Trend</h3>
+                            <p class="chart-subtitle">Model confidence over time</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="confidence-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Emotion Distribution -->
+                    <div class="chart-card glass-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-pie"></i> Emotion Distribution</h3>
+                            <p class="chart-subtitle">Percentage breakdown</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="distribution-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Sentiment Analysis -->
+                    <div class="chart-card glass-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-gauge-high"></i> Sentiment Score</h3>
+                            <p class="chart-subtitle">Emotional polarity</p>
+                        </div>
+                        <div class="sentiment-gauge" id="sentiment-gauge">
+                            <div class="gauge-container">
+                                <canvas id="sentiment-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emotion Heatmap -->
+                    <div class="chart-card glass-card full-width">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-fire"></i> Emotion Intensity Heatmap</h3>
+                            <p class="chart-subtitle">Emotion strength across time</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="heatmap-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transition Events Table -->
+                <div class="table-card glass-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-list"></i> Emotion Transition Events</h3>
+                        <p class="chart-subtitle">Detected emotion shifts</p>
+                    </div>
+                    <div class="table-container">
+                        <table id="transitions-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Confidence Change</th>
+                                    <th>Significant</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transitions-tbody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Audio Player -->
+                <div class="audio-player-card glass-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-play-circle"></i> Audio Playback</h3>
+                        <p class="chart-subtitle">Listen with emotion markers</p>
+                    </div>
+                    <div class="audio-player">
+                        <audio id="audio-player" controls></audio>
+                        <div class="audio-markers" id="audio-markers"></div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions-bar">
+                    <button id="download-report-btn" class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Download JSON Report
+                    </button>
+                    <button id="new-analysis-btn" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i>
+                        New Analysis
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 VoicePulse AI. Powered by Wav2Vec2 Emotion Recognition.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="recorder.js"></script>
+    <script src="api.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
