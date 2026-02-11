@@ -87,13 +87,13 @@ async function checkBackendHealth() {
         
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         let message = 'Backend server is not responding.';
-        
+
         if (isLocal) {
             message += ' Please start the backend server (START_BACKEND.bat).';
         } else {
-            message += ' Please ensure the API_BASE_URL is correctly configured for your production server.';
+            message += ' Set your backend URL by adding ?api=https://your-backend-domain to the page URL.';
         }
-        
+
         showNotification(message, 'error');
     }
 }

@@ -3,9 +3,39 @@
  * Handles all backend communication
  */
 
-// Use environment variable if provided, otherwise default to localhost
-// For Vercel deployment, you can set this in your dashboard or a config file
-const API_BASE_URL = window.VOICEPULSE_API_URL || 'http://localhost:5000';
+// Resolve API base URL for local or hosted deployments.
+function resolveApiBaseUrl() {
+    let url = window.VOICEPULSE_API_URL || '';
+    let storedUrl = '';
+    let paramUrl = '';
+
+    try {
+        const params = new URLSearchParams(window.location.search);
+        paramUrl = params.get('api') || '';
+        if (paramUrl) {
+            localStorage.setItem('VOICEPULSE_API_URL', paramUrl);
+        }
+    } catch {
+        paramUrl = '';
+    }
+
+    try {
+        storedUrl = localStorage.getItem('VOICEPULSE_API_URL') || '';
+    } catch {
+        storedUrl = '';
+    }
+
+    url = url || paramUrl || storedUrl;
+
+    if (!url) {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        url = isLocal ? 'http://localhost:5000' : 'http://localhost:5000';
+    }
+
+    return url.replace(/\/+$/, '');
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 class VoicePulseAPI {
     constructor(baseUrl = API_BASE_URL) {

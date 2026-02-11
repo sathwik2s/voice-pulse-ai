@@ -3,6 +3,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/favicon.ico", "destination": "/frontend/favicon.svg" },
+    { "source": "/favicon.png", "destination": "/frontend/favicon.svg" },
     { "source": "/", "destination": "/frontend/index.html" },
     { "source": "/(style.css|api.js|dashboard.js|recorder.js)", "destination": "/frontend/$1" },
     { "source": "/(.*)", "destination": "/frontend/$1" }
