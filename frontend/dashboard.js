@@ -84,7 +84,17 @@ async function checkBackendHealth() {
         console.log('✅ Backend is healthy');
     } catch (error) {
         console.error('❌ Backend health check failed:', error);
-        showNotification('Backend server is not responding. Please start the server.', 'error');
+        
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        let message = 'Backend server is not responding.';
+        
+        if (isLocal) {
+            message += ' Please start the backend server (START_BACKEND.bat).';
+        } else {
+            message += ' Please ensure the API_BASE_URL is correctly configured for your production server.';
+        }
+        
+        showNotification(message, 'error');
     }
 }
 
